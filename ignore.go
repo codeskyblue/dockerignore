@@ -10,8 +10,6 @@ import (
 	"regexp"
 	"strings"
 	"text/scanner"
-
-	"github.com/qiniu/log"
 )
 
 // exclusion return true if the specified pattern is an exclusion
@@ -150,9 +148,9 @@ func optimizedMatches(file string, patterns []string, patDirs [][]string) (bool,
 		}
 	}
 
-	if matched {
-		log.Debugf("Skipping excluded path: %s", file)
-	}
+	//if matched {
+	//log.Debugf("Skipping excluded path: %s", file)
+	//}
 
 	return matched, nil
 }
