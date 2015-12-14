@@ -65,7 +65,7 @@ func ReadIgnore(reader io.ReadCloser) ([]string, error) {
 // slice of patterns cleaned with filepath.Clean, stripped
 // of any empty patterns and lets the caller know whether the
 // slice contains any exception patterns (prefixed with !).
-func CleanPatterns(patterns []string) ([]string, [][]string, bool, error) {
+func cleanPatterns(patterns []string) ([]string, [][]string, bool, error) {
 	// Loop over exclusion patterns and:
 	// 1. Clean them up.
 	// 2. Indicate whether we are dealing with any exception rules.
@@ -106,12 +106,12 @@ func Matches(file string, patterns []string) (bool, error) {
 		return false, nil
 	}
 
-	patterns, patDirs, _, err := CleanPatterns(patterns)
+	patterns, patDirs, _, err := cleanPatterns(patterns)
 	if err != nil {
 		return false, err
 	}
 
-	return OptimizedMatches(file, patterns, patDirs)
+	return optimizedMatches(file, patterns, patDirs)
 }
 
 // OptimizedMatches is basically the same as fileutils.Matches() but optimized for archive.go.
@@ -119,7 +119,7 @@ func Matches(file string, patterns []string) (bool, error) {
 // doesn't need to do as much error checking and clean-up. This was done to avoid
 // repeating these steps on each file being checked during the archive process.
 // The more generic fileutils.Matches() can't make these assumptions.
-func OptimizedMatches(file string, patterns []string, patDirs [][]string) (bool, error) {
+func optimizedMatches(file string, patterns []string, patDirs [][]string) (bool, error) {
 	matched := false
 	parentPath := filepath.Dir(file)
 	parentPathDirs := strings.Split(parentPath, "/")
