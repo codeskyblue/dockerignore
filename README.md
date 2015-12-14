@@ -1,4 +1,6 @@
 # dockerignore
+[![GoDoc](https://godoc.org/github.com/codeskyblue/dockerignore?status.svg)](https://godoc.org/github.com/codeskyblue/dockerignore)
+
 go library parse gitignore file, source code most from [docker](https://github.com/docker/docker)
 
 ## Usage
