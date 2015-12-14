@@ -21,10 +21,22 @@ func exclusion(pattern string) bool {
 
 // empty return true if the specified pattern is empty
 func empty(pattern string) bool {
-	return pattern == ""
+	return pattern == "" || strings.HasPrefix(pattern, "#")
 }
 
-// ReadDockerIgnore reads a .dockerignore file and returns the list of file patterns
+// Read ignore from file
+func ReadIgnoreFile(filename string) ([]string, error) {
+	igrd, err := os.Open(filename)
+	if err != nil {
+		//if os.IsNotExist(err){
+		//    return []string{}, nil
+		//}
+		return nil, err
+	}
+	return ReadIgnore(igrd)
+}
+
+// ReadIgnore reads a .dockerignore file and returns the list of file patterns
 // to ignore. Note this will trim whitespace from each line as well
 // as use GO's "clean" func to get the shortest/cleanest path for each.
 func ReadIgnore(reader io.ReadCloser) ([]string, error) {
@@ -37,7 +49,7 @@ func ReadIgnore(reader io.ReadCloser) ([]string, error) {
 
 	for scanner.Scan() {
 		pattern := strings.TrimSpace(scanner.Text())
-		if pattern == "" {
+		if empty(pattern) {
 			continue
 		}
 		pattern = filepath.Clean(pattern)

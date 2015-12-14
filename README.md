@@ -2,10 +2,31 @@
 go library parse gitignore file, source code most from [docker](https://github.com/docker/docker)
 
 ## Usage
+```go
+package main
 
-    import (
-        ignore "github.com/codeskyblue/dockerignore"
-    )
+import (
+    "bytes"
+    "io/ioutil"
+    "log"
+
+    ignore "github.com/codeskyblue/dockerignore"
+)
+
+func main() {
+    // patterns, err := ignore.ReadIgnoreFile(".gitignore")
+    rd := ioutil.NopCloser(bytes.NewBufferString("*.exe"))
+    patterns, err := ignore.ReadIgnore(rd)
+    if err != nil {
+        log.Fatal(err)
+    }   
+    isSkip, err := ignore.Matches("hello.exe", patterns)
+    if err != nil {
+        log.Fatal(err)
+    }   
+    log.Printf("Should skipped true, got %v", isSkip)
+}
+```
 
 ## Rules
 The Go lib interprets a `.dockerignore` like file as a newline-separated list of patterns similar to the file globs of Unix shells. 
